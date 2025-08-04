@@ -1,11 +1,17 @@
+// app/products/page.tsx
+
 import ProductsServer from "./ProductsServer";
 
-interface ProductsPageProps {
-  searchParams?: { category?: string };
+interface SearchParams {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
-  const category = searchParams?.category;
+export default async function ProductsPage({ searchParams }: SearchParams) {
+  const resolvedSearchParams = await searchParams;
+  const category =
+    typeof resolvedSearchParams.category === "string"
+      ? resolvedSearchParams.category
+      : undefined;
 
   return <ProductsServer category={category} />;
 }
